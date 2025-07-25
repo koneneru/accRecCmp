@@ -5,11 +5,12 @@ import (
 	"comparer/entity"
 	"encoding/json"
 	"fmt"
+	"os"
 )
 
 const (
-	LS             = "ЛицевыеСчета.txt"
-	PU             = "ПостоянныеУдержания.txt"
+	LS             = `input\ЛицевыеСчета.txt`
+	PU             = `input\ПостоянныеУдержания.txt`
 	saveNormalized = false
 )
 
@@ -38,7 +39,17 @@ func main() {
 		return
 	}
 
-	fmt.Println(string(*resultJson))
+	resultFile, err := os.Create(`output\result.json`)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	resultJsonString := string(*resultJson)
+
+	resultFile.WriteString(resultJsonString)
+
+	fmt.Println(resultJsonString)
 }
 
 func compare(accounts []*entity.Account, recoupments []*entity.Recoupment) (*[]byte, error) {
